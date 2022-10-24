@@ -1,26 +1,21 @@
 #include <stdio.h>
 
-int arr[25], sorted[25], limit;
+int arr[25], sorted[25], limit, key;
 
 void bubbleSort() {
 	for (int i = 0; i < limit; i++) sorted[i] = arr[i];
 
-	for (int i = 0; i < limit-1; i++) {
-		for (int j = 0; j < limit-1-i; j++) {
-			if (sorted[j] > sorted[j+1]) {
-				int temp = sorted[j];
-				sorted[j] = sorted[j+1];
-				sorted[j+1] = temp;
-			}
-		}
+	for (int i = 0; i < limit-1; i++) for (int j = 0; j < limit-1-i; j++)
+	if (sorted[j] > sorted[j+1]) {
+		int temp = sorted[j];
+		sorted[j] = sorted[j+1];
+		sorted[j+1] = temp;
 	}
 }
 
 int linearSearch(int key) {
-	for (int i = 0; i < limit; i++) {
-		if (arr[i] == key) return i;
-	}
-	
+	for (int i = 0; i < limit; i++) if (arr[i] == key) return i;
+
 	return -1;
 }
 
@@ -36,6 +31,12 @@ int binarySearch(int key) {
 	}
 	
 	return -1;
+}
+
+int getKey() {
+	printf("Enter the key to be searched: ");
+	scanf("%d", &key);
+	return key;
 }
 
 int main() {
@@ -57,7 +58,7 @@ int main() {
 	printf("\n\t     UnSorted     Sorted\n");
 	for (int i = 0; i < limit; i++) printf("element[%d]\t%d\t    %d\t\n", i, arr[i], sorted[i]);
 	
-	int key, input, result;
+	int input = 0;
 	
 	printf("\n");
 	printf("Menu:\n");
@@ -67,29 +68,18 @@ int main() {
 	
 	printf("\nTip: Use option number to select it\n");
 
-	while (1) {
+	while (input != 3) {
 		printf(">> ");
 		scanf("%d", &input);
 		
-		if (input == 1) {
-			printf("Enter the key to be searched: ");
-			scanf("%d", &key);
-			result = linearSearch(key);
-		} else if (input == 2) {
-			printf("Enter the key to be searched: ");
-			scanf("%d", &key);
-			result = binarySearch(key);
-		} else if (input == 3) return 0;
-		else {
-			printf("Error: Invalid choice!!!\n\n");
-			continue;
-		}
+		int result= -2;
+
+		if (input == 1) result = linearSearch(getKey());
+		else if (input == 2) result = binarySearch(getKey());
 		
-		if (result < 0) printf("%d not found\n", key);
+		if (result == -2) printf("Error: Invalid choice!!!\n\n");
+		else if (result < 0) printf("%d not found\n", key);
 		else printf("%d is found at the location %d\n", key, result);
 		printf("\n");
 	}
-	
-	//printf("\n");
-	//for (int i = 0; i < limit; i++) printf("%d\n", arr[i]);
 }
