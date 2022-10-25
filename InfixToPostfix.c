@@ -54,7 +54,10 @@ void main() {
 			if (cPrecedence == -2) OutputStr[outLen++] = symbol;
 			else if (cPrecedence == -1) push(symbol);
 			else {
-				if (cPrecedence <= prevPrecedence) OutputStr[outLen++] = pop();
+				while (cPrecedence <= prevPrecedence) {
+					OutputStr[outLen++] = pop();
+					prevPrecedence = getPrecedence(stack[Top]);
+				}
 				push(symbol);
 			}
 		}

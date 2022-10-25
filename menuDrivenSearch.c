@@ -68,7 +68,7 @@ int main() {
 	
 	printf("\nTip: Use option number to select it\n");
 
-	while (input != 3) {
+	while (1) {
 		printf(">> ");
 		scanf("%d", &input);
 		
@@ -77,7 +77,7 @@ int main() {
 		if (input == 1) result = linearSearch(getKey());
 		else if (input == 2) result = binarySearch(getKey());
 		
-		if (result == -2) printf("Error: Invalid choice!!!\n\n");
+		if (result == -2) printf("Error: Invalid choice!!!\n");
 		else if (result < 0) printf("%d not found\n", key);
 		else printf("%d is found at the location %d\n", key, result);
 		printf("\n");
