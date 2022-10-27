@@ -1,3 +1,6 @@
+//Ansif M Shamsu
+//CSE-A, S3, 26
+
 #include <stdio.h>
 
 int arr[25], sorted[25], limit, key;
