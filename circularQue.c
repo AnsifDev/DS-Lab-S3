@@ -1,20 +1,20 @@
 #include<stdio.h>
 #include<string.h>
 
-int que[10], f=0, r=-1;
+int que[10], f=0, r=0;
 
 void insert() {
 	int value;
 	printf("Enter the value: ");
 	scanf("%d", &value);
-	if (f%10 == r || r == -1 && f > 9) printf("Error: Queue overflow!!!\n");
+	if (f-r > 10) printf("Error: Queue overflow!!!\n");
 	else que[f++%10] = value;
 }
 
 void delete() {
-	if (r+1 < f) printf("Value removed is %d\n", que[++r]);
+	if (r+1 < f) printf("Value removed is %d\n", que[r++]);
 	else printf("Error: Queue underflow!!!\n");
-	if (r >= 10) {
+	if (r > 9) {
 		r %= 10;
 		f %= 10;
 	}
@@ -41,7 +41,7 @@ void main() {
 			case 3: return;
 			default: printf("Error: Invalid option selected\n");
 		}
-		for (int i = r+1; i < f; i++) printf("%d\t", que[i%10]);
+		for (int i = r; i < f; i++) printf("%d\t", que[i%10]);
 		if (r+1 < f) printf("\n");
 		printf("\n");
 	}
