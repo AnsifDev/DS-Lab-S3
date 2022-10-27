@@ -7,12 +7,12 @@ void insert() {
 	int value;
 	printf("Enter the value: ");
 	scanf("%d", &value);
-	if (f-r > 10) printf("Error: Queue overflow!!!\n");
+	if (f-r > 9) printf("Error: Queue overflow!!!\n");
 	else que[f++%10] = value;
 }
 
 void delete() {
-	if (r+1 < f) printf("Value removed is %d\n", que[r++]);
+	if (r < f) printf("Value removed is %d\n", que[r++]);
 	else printf("Error: Queue underflow!!!\n");
 	if (r > 9) {
 		r %= 10;
