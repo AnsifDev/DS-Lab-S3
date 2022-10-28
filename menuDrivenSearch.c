@@ -79,6 +79,7 @@ int main() {
 
 		if (input == 1) result = linearSearch(getKey());
 		else if (input == 2) result = binarySearch(getKey());
+		else if (input == 3) break;
 		
 		if (result == -2) printf("Error: Invalid choice!!!\n");
 		else if (result < 0) printf("%d not found\n", key);
