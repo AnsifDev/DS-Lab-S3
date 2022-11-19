@@ -1,6 +1,5 @@
-//Ansif M Shamsu 
+//Ansif M Shamsu
 //CSE-A, S3, 26
-
 
 #include <stdio.h>
 
