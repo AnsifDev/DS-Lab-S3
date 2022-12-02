@@ -167,33 +167,4 @@ int length(struct LinkedList *list) {
     return i;
 }
 
-void main() {
-    int size;
-    struct LinkedList *list1 = new_LinkedList(), *list2 = new_LinkedList();
-    struct Iterator *iter1 = new_Iterator(list1), *iter2 = new_Iterator(list2);
-
-    if (iter1 == NULL) printf("Error in iter1\n");
-    if (iter2 == NULL) printf("Error in iter2\n");
-
-    printf("Enter the size: ");
-    scanf("%d", &size);
-
-    for (int i = 0; i < size; i++) {
-        int value;
-        printf("Enter the value for element[%d]: ", i);
-        scanf("%d", &value);
-
-        if (insert(list1, -1, value) != 0) {
-            printf("Error on inserting!!!\n");
-            return;
-        }
-    }
-
-    resetIter(iter1);
-    while (hasNextNode(iter1)) insert(list2, 0, nextNode(iter1)->value);
-
-    
-    //printf("Log: %d\n", hasNextNode(iter1));
-    resetIter(iter2);
-    for (int i = 0; hasNextNode(iter2); i++) printf("Element[%d]: %d\n", i, nextNode(iter2)->value);
-}
+void main() {}
