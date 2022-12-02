@@ -106,6 +106,7 @@ int delete(int index, int *value) {
         head = temp->link;
     } else {
         ptr = getNode(index-1);
+        if (ptr == NULL) return 1;
         temp = ptr->link;
         if (temp == NULL) return 1;
         ptr->link = temp->link;
