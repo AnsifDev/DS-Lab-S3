@@ -153,7 +153,8 @@ void main() {
 	printf("Menu:\n    1. Insert at the begining\n    2. Insert at nth position\n");
     printf("    3. Insert at the end\n    4. Delete at the begining\n");
 	printf("    5. Delete at nth position\n    6. Delete at the end\n");
-    printf("    7. Get at the nth position\n    8. Length of the List\n    9. Exit\n\n");
+    printf("    7. Get at the nth position\n    8.Set at the nth position\n");
+    printf("    9. Length of the List\n    10. Exit\n\n");
 	while(1) {
 		printf(">> ");
 		scanf("%d", &inp);
@@ -192,7 +193,15 @@ void main() {
 
             if (get(index, &value) == 0) printf("The value is %d\n", value);
             else printf("Error: Invalid index\n");
-        } else if (inp == 8) printf("The length of the linked list is %d\n", length());
+        } else if (inp == 8) {
+            printf("Enter the index: ");
+            scanf("%d", &index);
+
+            printf("Enter the value: ");
+            scanf("%d", &value);
+
+            if (set(index, value) != 0) printf("Error: Invalid index\n");
+        } else if (inp == 9) printf("The length of the linked list is %d\n", length());
         else break;
 
         printf("List:\t");
