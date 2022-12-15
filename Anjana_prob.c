@@ -66,6 +66,8 @@ struct node* getNode(struct LinkedList* list, int index) {
 }
 
 void insertAtFirst(struct LinkedList* list, int value) {
+    if (list == NULL) return;
+
     struct node* temp = malloc(sizeof(struct node));
     temp->value = value;
     temp->link = list->head;
