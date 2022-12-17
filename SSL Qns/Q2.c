@@ -14,11 +14,6 @@ void main() {
         SinglyLinkedList_insert(list, -1, value);
     }
 
-    printf("List: ");
-    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter)) {
-        int value = SinglyLinkedList_Iterator_nextNode(iter)->value;
-        printf("\t%d", value);
-    }
-    printf("\n");
+    int length = SinglyLinkedList_length(list);
+    printf("Length is %d\n", length);
 }

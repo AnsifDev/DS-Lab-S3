@@ -14,11 +14,13 @@ void main() {
         SinglyLinkedList_insert(list, -1, value);
     }
 
-    printf("List: ");
+    int number, count;
+    printf("Enter the number to check the occurance: ");
+    scanf("%d", &number);
+
     struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter)) {
-        int value = SinglyLinkedList_Iterator_nextNode(iter)->value;
-        printf("\t%d", value);
-    }
-    printf("\n");
+    while(SinglyLinkedList_Iterator_hasNextNode(iter))
+        if (SinglyLinkedList_Iterator_nextNode(iter)->value == number) count++;
+    
+    printf("Count of %d in the list is %d\n", number, count);
 }
