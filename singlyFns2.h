@@ -6,52 +6,53 @@ struct node {
     struct node *link;
 };
 
-struct LinkedList {
-    struct node *head;
+struct SinglyLinkedList {
+    struct node *head, *tail;
 };
 
-struct LinkedList* new_LinkedList() {
-    return malloc(sizeof(struct LinkedList));
+struct SinglyLinkedList* new_SinglyLinkedList() {
+    return malloc(sizeof(struct SinglyLinkedList));
 }
 
-struct Iterator {
+struct SinglyLinkedList_Iterator {
     struct node *ptr, **head;
 };
 
-struct Iterator* new_Iterator(struct LinkedList* list) {
+struct SinglyLinkedList_Iterator* new_SinglyLinkedList_Iterator(struct SinglyLinkedList* list) {
     if (list == NULL) return NULL;
-    struct Iterator* iter = malloc(sizeof(struct Iterator));
+    struct SinglyLinkedList_Iterator* iter = malloc(sizeof(struct SinglyLinkedList_Iterator));
     iter->ptr = list->head;
     iter->head = &(list->head);
     return iter;
 }
 
-int hasNextNode(struct Iterator* iter) {
+int hasNextNode(struct SinglyLinkedList_Iterator* iter) {
     if (iter == NULL) return 0;
     return iter->ptr != NULL;
 }
 
-struct node* nextNode(struct Iterator* iter) {
+struct node* nextNode(struct SinglyLinkedList_Iterator* iter) {
     if (iter == NULL) return NULL;
     struct node* temp = iter->ptr;
     if (temp != NULL) iter->ptr = temp->link;
     return temp;
 }
 
-void resetIter(struct Iterator* iter) {
+void resetIter(struct SinglyLinkedList_Iterator* iter) {
     if (iter == NULL) return;
     iter->ptr = *(iter->head);
 }
 
-struct node* getNode(struct LinkedList* list, int index) {
+struct node* SinglyLinkedList_getNode(struct SinglyLinkedList* list, int index) {
     if (list == NULL) return NULL;
 
+    if (index < -2) return NULL;
     if (index == 0) return list->head;
+    if (index == -1) return list->tail;
     
     struct node* ptr;
-    struct Iterator* iter = new_Iterator(list);
-    if (index == -1) while(hasNextNode(iter)) ptr = nextNode(iter);
-    else if (index == -2) {
+    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
+    if (index == -2) {
         if (list->head->link != NULL) while (1) {
             ptr = nextNode(iter);
             if (ptr->link->link == NULL) break;
@@ -70,49 +71,53 @@ struct node* getNode(struct LinkedList* list, int index) {
     return ptr;
 }
 
-int insertNode(struct LinkedList* list, int index, struct node* temp) {
+int SinglyLinkedList_insertNode(struct SinglyLinkedList* list, int index, struct node* temp) {
     if (list == NULL) return 1;
 
     if (index == 0) {
         temp->link = list->head;
         list->head = temp;
+        if (temp->link == NULL) list->tail = temp;
         return 0;
     }
 
     struct node* ptr;
-    if (index == -1) ptr = getNode(list, -1);
-    else if (index > 0) ptr = getNode(list, index-1); 
+    if (index == -1) ptr = SinglyLinkedList_getNode(list, -1);
+    else if (index > 0) ptr = SinglyLinkedList_getNode(list, index-1); 
     else return 1;
 
     if (ptr == NULL) return 1;
     temp->link = ptr->link;
     ptr->link = temp;
+    if (temp->link == NULL)  list->tail = temp;
     return 0;
 }
 
-int insert(struct LinkedList* list, int index, int value) {
+int SinglyLinkedList_insert(struct SinglyLinkedList* list, int index, int value) {
     if (list == NULL) return 1;
     
     struct node* temp = malloc(sizeof(struct node));
     temp->value = value;
 
-    int returnCode = insertNode(list, index, temp);
+    int returnCode = SinglyLinkedList_insertNode(list, index, temp);
     if (returnCode == 1) free(temp);
     return returnCode;
 }
 
-int delete(struct LinkedList* list, int index, int* value) {
+int SinglyLinkedList_delete(struct SinglyLinkedList* list, int index, int* value) {
     if (list == NULL) return 1;
 
     struct node* temp;
     if (index == 0) {
         temp = list->head;
         list->head = temp->link;
+        if (head == NULL) list->tail = NULL;
     } else if (index > -2) {
-        struct node* ptr = getNode(list, index-1);
+        struct node* ptr = SinglyLinkedList_getNode(list, index-1);
         if (ptr == NULL) return 1;
         temp = ptr->link;
         ptr->link = temp->link;
+        if (ptr->link == NULL) list->tail = ptr;
     } else return 1;
 
     *value = temp->value;
@@ -120,35 +125,35 @@ int delete(struct LinkedList* list, int index, int* value) {
     return 0;
 }
 
-int get(struct LinkedList* list, int index, int* value) {
+int SinglyLinkedList_get(struct SinglyLinkedList* list, int index, int* value) {
     if (list == NULL) return 1;
 
-    struct node* ptr = getNode(list, index);
+    struct node* ptr = SinglyLinkedList_getNode(list, index);
     if (ptr == NULL) return 1;
 
     *value = ptr->value;
     return 0;
 }
 
-int set(struct LinkedList* list, int index, int value) {
+int SinglyLinkedList_set(struct SinglyLinkedList* list, int index, int value) {
     if (list == NULL) return 1;
 
-    struct node* ptr = getNode(list, index);
+    struct node* ptr = SinglyLinkedList_getNode(list, index);
     if (ptr == NULL) return 1;
 
     ptr->value = value;
     return 0;
 }
 
-int length(struct LinkedList* list) {
+int SinglyLinkedList_length(struct SinglyLinkedList* list) {
     int length = 0;
-    struct Iterator* iter = new_Iterator(list);
+    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
     while(nextNode(iter) != NULL) length++;
     free(iter);
     return length;
 }
 
-void clearLinkedList(struct LinkedList* list) {
+void SinglyLinkedList_clear(struct SinglyLinkedList* list) {
     if (list == NULL) return;
 
     while (list->head != NULL) {

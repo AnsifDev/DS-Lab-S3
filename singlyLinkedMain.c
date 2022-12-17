@@ -1,8 +1,8 @@
 #include "singlyFns2.h"
 
 void main() {
-    struct LinkedList* list1 = new_LinkedList();
-    struct Iterator* iter = new_Iterator(list1);
+    struct SinglyLinkedList* list1 = new_SinglyLinkedList();
+    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list1);
     int inp = 0;
 	printf("Menu:\n    1. Insert at the begining\n    2. Insert at nth position\n");
     printf("    3. Insert at the end\n    4. Delete at the begining\n");
@@ -30,7 +30,7 @@ void main() {
                 scanf("%d", &index);
             }
 
-            if (insert(list1, index, value) != 0) printf("Error: Invalid index\n");
+            if (SinglyLinkedList_insert(list1, index, value) != 0) printf("Error: Invalid index\n");
         } else if (inp < 7) {
             if (inp == 4) index = 0;
             else if (inp == 6) index = -1;
@@ -39,13 +39,13 @@ void main() {
                 scanf("%d", &index);
             }
 
-            if (delete(list1, index, &value) == 0) printf("Value deleted: %d\n", value);
+            if (SinglyLinkedList_delete(list1, index, &value) == 0) printf("Value deleted: %d\n", value);
             else printf("Error: Invalid index\n");
         } else if (inp == 7) {
             printf("Enter the index: ");
             scanf("%d", &index);
 
-            if (get(list1, index, &value) == 0) printf("The value is %d\n", value);
+            if (SinglyLinkedList_get(list1, index, &value) == 0) printf("The value is %d\n", value);
             else printf("Error: Invalid index\n");
         } else if (inp == 8) {
             printf("Enter the index: ");
@@ -54,8 +54,8 @@ void main() {
             printf("Enter the value: ");
             scanf("%d", &value);
 
-            if (set(list1, index, value) != 0) printf("Error: Invalid index\n");
-        } else if (inp == 9) printf("The length of the linked list is %d\n", length(list1));
+            if (SinglyLinkedList_set(list1, index, value) != 0) printf("Error: Invalid index\n");
+        } else if (inp == 9) printf("The length of the linked list is %d\n", SinglyLinkedList_length(list1));
         else break;
 
         printf("List:\t");
@@ -64,7 +64,7 @@ void main() {
         printf("\n");
 	}
 
-    clearLinkedList(list1);
+    SinglyLinkedList_clear(list1);
     free(iter);
     free(list1);
 }
