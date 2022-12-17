@@ -59,8 +59,8 @@ void main() {
         else break;
 
         printf("List:\t");
-        resetIter(iter);
-        while (hasNextNode(iter)) printf("%d\t", nextNode(iter)->value);
+        SinglyLinkedList_Iterator_reset(iter);
+        while (SinglyLinkedList_Iterator_hasNextNode(iter)) printf("%d\t", SinglyLinkedList_Iterator_nextNode(iter)->value);
         printf("\n");
 	}
 
