@@ -47,21 +47,45 @@ void insert(struct BinTree *tree) {
 }
 
 void viewTree_Pre (struct node *tree) {
-    printf("%d\t", tree->value);
+    printf("\t%d", tree->value);
     if (tree->left != NULL) viewTree_Pre(tree->left);
     if (tree->right != NULL) viewTree_Pre(tree->right);
 }
 
 void pre(struct BinTree *tree) {
-    printf("Tree in pre order: ");
+    printf("Tree in Pre order: ");
     if (tree->root != NULL) viewTree_Pre(tree->root);
+    printf("\n");
+}
+
+void viewTree_In (struct node *tree) {
+    if (tree->left != NULL) viewTree_In(tree->left);
+    printf("\t%d", tree->value);
+    if (tree->right != NULL) viewTree_In(tree->right);
+}
+
+void in(struct BinTree *tree) {
+    printf("Tree in In order: ");
+    if (tree->root != NULL) viewTree_In(tree->root);
+    printf("\n");
+}
+
+void viewTree_Post (struct node *tree) {
+    if (tree->left != NULL) viewTree_Post(tree->left);
+    if (tree->right != NULL) viewTree_Post(tree->right);
+    printf("\t%d", tree->value);
+}
+
+void post(struct BinTree *tree) {
+    printf("Tree in Post order: ");
+    if (tree->root != NULL) viewTree_Post(tree->root);
     printf("\n");
 }
 
 void main() {
     struct BinTree *tree = new_BinTree();
 
-    printf("---Menu---\n  1. Insert 2. Pre-oder\n  3. In-oder\n  4. Post-order\n  5. Exit\n");
+    printf("---Menu---\n  1. Insert\n  2. Pre-oder\n  3. In-oder\n  4. Post-order\n  5. Exit\n");
 
     int input;
     while(1) {
@@ -71,8 +95,8 @@ void main() {
         switch (input) {
             case 1: insert(tree); break;
             case 2: pre(tree); break;
-            //case 3: in(); break;
-            //case 4: post(); break;
+            case 3: in(tree); break;
+            case 4: post(tree); break;
             case 5: printf("Exiting...\n"); return;
         }
     }
