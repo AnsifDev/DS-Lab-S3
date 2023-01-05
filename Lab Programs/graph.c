@@ -1,30 +1,76 @@
 #include<stdio.h>
 
-int graph[10][10], que[10], f=0, r=0, stack[10];
+int graph[10][10], maxNodes, que[10], f=0, r=0, stack[10], Top = -1;
 
-void insert() {
-	int value;
-	printf("Enter the value: ");
-	scanf("%d", &value);
-	if (f-r > 9) printf("Error: Queue overflow!!!\n");
-	else que[f++%10] = value;
+
+int push(int value) {
+    if (Top+1 >= 10) return 1;
+    stack[++Top] = value;
+    return 0;
 }
 
-void delete() {
-	if (r < f) printf("Value removed is %d\n", que[r++]);
-	else printf("Error: Queue underflow!!!\n");
+int pop(int *value) {
+    if (Top < 0) return 1;
+    *value = stack[Top--];
+    return 0;
+}
+
+
+int insert(int value) {
+	if (f-r > 9) return 1;
+	else que[f++%10] = value;
+    return 0;
+}
+
+int delete(int *value) {
+	if (r < f) *value = que[r++];
+	else return 1;
 	if (r > 9) {
 		r %= 10;
 		f %= 10;
 	}
+    return 0;
 }
 
-int bfs() {
+void bfs() {
+    int visted[] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+    insert(graph[0][0]);
+    while (1) {
+        int node;
+        if (delete(&node)) return;
+        printf("%d\n", node);
+        for (int i = 0; i < maxNodes; i++) {
+            int nNode = graph[node][i];
+            if (nNode == 0) continue;
+            if (visted[i] == 0) {
+                insert(i);
+                visted[i] = 1;
+            }
+        }
+    }
+}
+
+void dfs() {
+    int visted[] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    push(graph[0][0]);
+    while (1) {
+        int node;
+        if (pop(&node)) return;
+        printf("%d\n", node);
+        for (int i = 0; i < maxNodes; i++) {
+            int nNode = graph[node][i];
+            if (nNode == 0) continue;
+            if (visted[i] == 0) {
+                push(i);
+                visted[i] = 1;
+            }
+        }
+    }
 }
 
 void main() {
-    int maxNodes;
     printf("Enter the number of nodes (Maximum: 10): ");
     scanf("%d", &maxNodes);
 
