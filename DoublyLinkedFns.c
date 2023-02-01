@@ -44,75 +44,85 @@ int insert(struct LinkedList *list, int index, int value) {
     if (list == NULL) return 1;
 
     if (index == 0 || list->end == NULL) {
-        struct node *temp = malloc(sizeof(struct node));
         struct node *next = list->start;
 
+        struct node *temp = malloc(sizeof(struct node));
         temp->value = value;
-        temp->right = list->start;
 
-        if (list->start == NULL) list->end = temp;
-        else {
+        if (list->start != NULL) {
             temp->left = next->left;
             next->left = temp;
-        }
+        } else list->end = temp;
+
+        temp->right = list->start;
         list->start = temp;
     } else if (index == -1) {
-        struct node *temp = malloc(sizeof(struct node));
         struct node *prev = list->end;
 
+        struct node *temp = malloc(sizeof(struct node));
         temp->value = value;
-        temp->left = list->end;
-        temp->right = prev->right;
 
-        if (list->end == NULL) list->start = temp;
-        else prev->right = temp;
+        if (list->end != NULL) {
+            temp->right = prev->right;
+            prev->right = temp;
+        } else list->start = temp;
+
+        temp->left = list->end;
         list->end = temp;
     } else {
-        struct node *ptr = getNode(list, index-1);
-        if (ptr == NULL) return 1;
+        struct node *prev = getNode(list, index-1);
+        if (prev == NULL) return 1;
+        struct node *next = prev->right;
 
         struct node *temp = malloc(sizeof(struct node));
         temp->value = value;
 
-        temp->right = ptr->right;
-        temp->left = ptr;
-        if (ptr->right != NULL) ptr->right->left = temp;
-        else list->end = temp;
-        ptr->right = temp;
+        if (prev->right != NULL) {
+            temp->left = next->left;
+            next->left = temp;
+        } else list->end = temp;
+
+        temp->right = prev->right;
+        prev->right = temp;
     }
 
     return 0;
 }
 
 int delete(struct LinkedList *list, int index, int *value) {
-    if (list == NULL) return 1;
-
-    struct node *temp, *ptr;
-
     if (list->start == NULL) return 1;
     
     if (index == 0) {
-        temp = list->start;
+        struct node *temp = list->start;
+
         list->start = temp->right;
         if (list->start == NULL) list->end == NULL;
-        else list->start->left = NULL;
+        else list->start->left = temp->left;
+        
+        *value = temp->value;
+        free(temp);
     } else if (index == -1) {
-        temp = list->end;
+        struct node *temp = list->end;
+
         list->end = temp->left;
         if (list->end == NULL) list->start = NULL;
-        else list->end->right = NULL;
+        else list->end->right = temp->right;
+        
+        *value = temp->value;
+        free(temp);
     } else {
-        ptr = getNode(list, index-1);
-        if (ptr == NULL) return 1;
-        temp = ptr->right;
+        struct node *temp = getNode(list, index);
         if (temp == NULL) return 1;
-        ptr->right = temp->right;
-        temp->right->left = ptr;
-    }
-    
-    *value = temp->value;
-    free(temp);
 
+        struct node *prev = temp->left;
+        struct node *next = temp->right;
+
+        prev->right = temp->right;
+        next->left = temp->left;
+
+        *value = temp->value;
+        free(temp);
+    }
     return 0;
 }
 
