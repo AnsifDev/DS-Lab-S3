@@ -45,26 +45,33 @@ int insert(struct LinkedList *list, int index, int value) {
 
     if (index == 0 || list->end == NULL) {
         struct node *temp = malloc(sizeof(struct node));
+        struct node *next = list->start;
+
         temp->value = value;
-        if (list->start != NULL) {
-            temp->right = list->start;
-            list->start->left = temp;
-        } else list->end = temp;
+        temp->right = list->start;
+
+        if (list->start == NULL) list->end = temp;
+        else {
+            temp->left = next->left;
+            next->left = temp;
+        }
         list->start = temp;
     } else if (index == -1) {
         struct node *temp = malloc(sizeof(struct node));
+        struct node *prev = list->end;
+
         temp->value = value;
-        if (list->end != NULL) {
-            temp->left = list->end;
-            list->end->right = temp;
-        } else list->start = temp;
+        temp->left = list->end;
+        temp->right = prev->right;
+
+        if (list->end == NULL) list->start = temp;
+        else prev->right = temp;
         list->end = temp;
     } else {
-        struct node *ptr = getNode(list, index-1), *temp;
-
+        struct node *ptr = getNode(list, index-1);
         if (ptr == NULL) return 1;
 
-        temp = malloc(sizeof(struct node));
+        struct node *temp = malloc(sizeof(struct node));
         temp->value = value;
 
         temp->right = ptr->right;
