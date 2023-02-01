@@ -1,20 +1,20 @@
 #include "SinglyLinkedList.h"
 
-void display(struct SinglyLinkedList* list, char* msg) {
+void display(struct SLL* list, char* msg) {
     printf("%s", msg);
-    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter)) {
-        int value = SinglyLinkedList_Iterator_nextNode(iter)->value;
+    struct SLL_Iterator* iter = new_SLL_Iterator(list);
+    while(SLL_Iterator_hasNextNode(iter)) {
+        int value = SLL_Iterator_nextNode(iter)->value;
         printf("\t%d", value);
     }
     printf("\n");
 }
 
 void main() {
-    struct SinglyLinkedList *list, *odd, *even;
-    list = new_SinglyLinkedList();
-    odd = new_SinglyLinkedList();
-    even = new_SinglyLinkedList();
+    struct SLL *list, *odd, *even;
+    list = new_SLL();
+    odd = new_SLL();
+    even = new_SLL();
 
     int max;
     printf("Enter the max count: ");
@@ -25,14 +25,14 @@ void main() {
         int value;
         scanf("%d", &value);
 
-        SinglyLinkedList_insert(list, -1, value);
+        SLL_insert(list, -1, value);
     }
 
-    struct SinglyLinkedList_Iterator *iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter)) {
-        int value = SinglyLinkedList_Iterator_nextNode(iter)->value;
-        if (value%2 == 0) SinglyLinkedList_insert(even, -1, value);
-        else SinglyLinkedList_insert(odd, -1, value);
+    struct SLL_Iterator *iter = new_SLL_Iterator(list);
+    while(SLL_Iterator_hasNextNode(iter)) {
+        int value = SLL_Iterator_nextNode(iter)->value;
+        if (value%2 == 0) SLL_insert(even, -1, value);
+        else SLL_insert(odd, -1, value);
     }
 
     display(list, "Main: ");

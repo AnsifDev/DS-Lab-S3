@@ -1,20 +1,20 @@
 #include "SinglyLinkedList.h"
 
-void display(struct SinglyLinkedList* list, char* msg) {
+void display(struct SLL* list, char* msg) {
     printf("%s", msg);
-    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter)) {
-        int value = SinglyLinkedList_Iterator_nextNode(iter)->value;
+    struct SLL_Iterator* iter = new_SLL_Iterator(list);
+    while(SLL_Iterator_hasNextNode(iter)) {
+        int value = SLL_Iterator_nextNode(iter)->value;
         printf("\t%d", value);
     }
     printf("\n");
 }
 
 void main() {
-    struct SinglyLinkedList *list, *positive, *negative;
-    list = new_SinglyLinkedList();
-    positive = new_SinglyLinkedList();
-    negative = new_SinglyLinkedList();
+    struct SLL *list, *positive, *negative;
+    list = new_SLL();
+    positive = new_SLL();
+    negative = new_SLL();
 
     int max;
     printf("Enter the max count: ");
@@ -25,14 +25,14 @@ void main() {
         int value;
         scanf("%d", &value);
 
-        SinglyLinkedList_insert(list, -1, value);
+        SLL_insert(list, -1, value);
     }
 
-    struct SinglyLinkedList_Iterator *iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter)) {
-        int value = SinglyLinkedList_Iterator_nextNode(iter)->value;
-        if (value >= 0) SinglyLinkedList_insert(positive, -1, value);
-        else SinglyLinkedList_insert(negative, -1, value);
+    struct SLL_Iterator *iter = new_SLL_Iterator(list);
+    while(SLL_Iterator_hasNextNode(iter)) {
+        int value = SLL_Iterator_nextNode(iter)->value;
+        if (value >= 0) SLL_insert(positive, -1, value);
+        else SLL_insert(negative, -1, value);
     }
 
     display(list, "Main List: ");

@@ -1,10 +1,10 @@
 #include "SinglyLinkedList.h"
 
-void display(struct SinglyLinkedList* list, char* msg) {
+void display(struct SLL* list, char* msg) {
     printf("%s", msg);
-    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter)) {
-        int value = SinglyLinkedList_Iterator_nextNode(iter)->value;
+    struct SLL_Iterator* iter = new_SLL_Iterator(list);
+    while(SLL_Iterator_hasNextNode(iter)) {
+        int value = SLL_Iterator_nextNode(iter)->value;
         printf("\t%d", value);
     }
     printf("\n");
@@ -15,13 +15,13 @@ void main() {
     int max;
     scanf("%d", &max);
     
-    struct SinglyLinkedList* list = new_SinglyLinkedList();
+    struct SLL* list = new_SLL();
     for (int i = 0; i < max; i++) {
         printf("Enter the element[%d]: ", i);
         int value;
         scanf("%d", &value);
 
-        SinglyLinkedList_insert(list, -1, value);
+        SLL_insert(list, -1, value);
     }
 
     display(list, "List1: ");
@@ -30,9 +30,9 @@ void main() {
     printf("Enter the split index: ");
     scanf("%d", &index);
 
-    struct SinglyLinkedList* list2 = new_SinglyLinkedList();
+    struct SLL* list2 = new_SLL();
 
-    struct node* prevNode = SinglyLinkedList_getNode(list, index);
+    struct node* prevNode = SLL_getNode(list, index);
     struct node* temp = prevNode->link;
 
     prevNode->link = NULL;

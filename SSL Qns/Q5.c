@@ -1,10 +1,10 @@
 #include "SinglyLinkedList.h"
 
-void display(struct SinglyLinkedList* list) {
+void display(struct SLL* list) {
     printf("List: ");
-    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter)) {
-        int value = SinglyLinkedList_Iterator_nextNode(iter)->value;
+    struct SLL_Iterator* iter = new_SLL_Iterator(list);
+    while(SLL_Iterator_hasNextNode(iter)) {
+        int value = SLL_Iterator_nextNode(iter)->value;
         printf("\t%d", value);
     }
     printf("\n");
@@ -15,13 +15,13 @@ void main() {
     int max;
     scanf("%d", &max);
     
-    struct SinglyLinkedList* list = new_SinglyLinkedList();
+    struct SLL* list = new_SLL();
     for (int i = 0; i < max; i++) {
         printf("Enter the element[%d]: ", i);
         int value;
         scanf("%d", &value);
 
-        SinglyLinkedList_insert(list, -1, value);
+        SLL_insert(list, -1, value);
     }
 
     display(list);
@@ -30,12 +30,12 @@ void main() {
     printf("Enter the number: ");
     scanf("%d", &Num);
 
-    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
-    while(SinglyLinkedList_Iterator_hasNextNode(iter))
-        if (SinglyLinkedList_Iterator_nextNode(iter)->value <= Num) index++;
+    struct SLL_Iterator* iter = new_SLL_Iterator(list);
+    while(SLL_Iterator_hasNextNode(iter))
+        if (SLL_Iterator_nextNode(iter)->value <= Num) index++;
         else break;
 
-    SinglyLinkedList_insert(list, index, Num);
+    SLL_insert(list, index, Num);
 
     display(list);
 }

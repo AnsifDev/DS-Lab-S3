@@ -46,10 +46,50 @@ void insert(struct BinTree *tree) {
     else printf("Insertion failed\n");
 }
 
+// void viewTree_Pre (struct node *tree) {
+//     printf("\t%d", tree->value);
+//     if (tree->left != NULL) viewTree_Pre(tree->left);
+//     if (tree->right != NULL) viewTree_Pre(tree->right);
+// }
+
+struct stackNode {
+    struct node *item;
+    int execLoc;
+    struct stackNode *link;
+} *stackHead, *temp;
+
+void push(struct node *item) {
+    temp = malloc(sizeof(struct stackNode));
+    temp->item = item;
+    temp->execLoc = 0;
+    temp->link = stackHead;
+    stackHead = temp;
+}
+
+void pop() {
+    temp = stackHead;
+    stackHead = temp->link;
+    free(temp);
+}
+
 void viewTree_Pre (struct node *tree) {
-    printf("\t%d", tree->value);
-    if (tree->left != NULL) viewTree_Pre(tree->left);
-    if (tree->right != NULL) viewTree_Pre(tree->right);
+    push(tree);
+    while(stackHead != NULL) {
+        switch (stackHead->execLoc) {
+            case 0: printf("\t%d", stackHead->item->value);
+            case 1: if (stackHead->item->left != NULL) {
+                stackHead->execLoc = 2;
+                push(stackHead->item->left);
+                continue;
+            }
+            case 2: if (stackHead->item->right != NULL) {
+                stackHead->execLoc = 3;
+                push(stackHead->item->right);
+                continue;
+            }
+            case 3: pop();
+        }
+    }
 }
 
 void pre(struct BinTree *tree) {
