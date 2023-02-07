@@ -10,21 +10,7 @@ struct DLL {
     struct node *start, *end;
 };
 
-struct Iterator {
-    struct node *next, *prev;
-    struct DLL *list;
-};
-
 struct DLL *new_DLL() {return malloc(sizeof(struct DLL));}
-
-struct Iterator *new_Iterator(struct DLL *list) {
-    if (list == NULL) return NULL;
-    
-    struct Iterator *iter = malloc(sizeof(struct Iterator));
-    iter->next = list->start;
-    iter->list = list;
-    return iter;
-}
 
 struct node* getNode(struct DLL *list, int index) {
     if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function getNode(DLL, int, int): node\n");
@@ -110,54 +96,6 @@ int delete(struct DLL *list, int index) {
     return value;
 }
 
-struct node* nextNode(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function nextNode(Iterator): node\n");
-    
-    struct node *temp = iter->next;
-    if (iter->next != NULL) {
-        iter->prev = iter->next;
-        iter->next = temp->right;
-    }
-    return temp;
-}
-
-struct node* prevNode(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function prevNode(Iterator): node\n");
-    
-    struct node *temp = iter->prev;
-    if (iter->prev != NULL) {
-        iter->next = iter->prev;
-        iter->prev = temp->left;
-    }
-    return temp;
-}
-
-int hasNextNode(struct Iterator *iter) { 
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function hasNextNode(Iterator): int\n");
-    
-    return iter->next != NULL;
-}
-
-int hasPrevNode(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function hasPrevNode(Iterator): int\n");
-    
-    return iter->prev != NULL;
-}
-
-void resetIterToStart(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function resetIterToStart(Iterator): void\n");
-    
-    iter->next = iter->list->start;
-    iter->prev = NULL;
-}
-
-void resetIterToEnd(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function resetIterToEnd(Iterator): void\n");
-    
-    iter->prev = iter->list->end;
-    iter->next = NULL;
-}
-
 int get(struct DLL *list, int index) {
     if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function get(DLL, int): int\n");
 
@@ -173,15 +111,13 @@ void set(struct DLL *list, int index, int value) {
 int length(struct DLL *list) {
     if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function length(DLL): int\n");
     
-    struct Iterator *iter = new_Iterator(list);
     int length = 0;
-    while (nextNode(iter) != NULL) length++;
+    for (struct node *ptr = list->start; ptr != NULL; ptr = ptr->right) length++;
     return length;
 }
 
 void main() {
     struct DLL *linked = new_DLL();
-    struct Iterator *iter = new_Iterator(linked);
 
     printf("Menu:\n    1.Insert At First\n    2.Insert At nth Position\n    3.Insert At End\n");
     printf("    4.Delete At First\n    5.Delete At nth Position\n    6.Delete At End\n");
@@ -198,46 +134,27 @@ void main() {
         }
 		
         int value, index;
-        if (inp < 4) {
-            if (inp == 1) index = 0;
-            else if (inp == 3) index = -1;
-            else {
-                printf("Enter the index: ");
-                scanf("%d", &index);
-            }
-
-            printf("Enter the value: ");
-            scanf("%d", &value);
-
-            insert(linked, index, value);
-        } else if (inp < 7) {
-            if (inp == 4) index = 0;
-            else if (inp == 6) index = -1;
-            else {
-                printf("Enter the index: ");
-                scanf("%d", &index);
-            }
-
-            printf("Value deleted: %d\n", delete(linked, index));
-        } else if (inp == 7) {
+        if (inp%3 == 2 || inp == 7) {
             printf("Enter the index: ");
             scanf("%d", &index);
+        }
+        else if (inp == 1 || inp == 4) index = 0;
+        else if (inp == 3 || inp == 6) index = -1;
 
-            printf("The value is %d\n", get(linked, index));
-        } else if (inp == 8) {
-            printf("Enter the index: ");
-            scanf("%d", &index);
-
+        if (inp < 4 || inp == 8) {
             printf("Enter the value: ");
             scanf("%d", &value);
+        }
 
-            set(linked, index, value);
-        } else if (inp == 9) printf("The length of the linked list is %d\n", length(linked));
-        else break;
+        if (inp < 4) insert(linked, index, value);
+        else if (inp < 7) printf("Value deleted: %d\n", delete(linked, index));
+        else if (inp == 7) printf("The value is %d\n", get(linked, index));
+        else if (inp == 8) set(linked, index, value);
+        else if (inp == 9) printf("The length of the linked list is %d\n", length(linked));
 
         printf("List:\t");
-        resetIterToStart(iter);
-        while (hasNextNode(iter)) printf("%d\t", nextNode(iter)->value);
+        for (struct node *ptr = linked->start; ptr != NULL; ptr = ptr->right)
+            printf("%d\t", ptr->value);
         printf("\n");
     }
 }
