@@ -10,17 +10,17 @@ struct DLL {
     struct node *start, *end;
 };
 
-struct Iterator {
+struct Iter {
     struct node *next, *prev;
     struct DLL *list;
 };
 
 struct DLL *new_DLL() {return malloc(sizeof(struct DLL));}
 
-struct Iterator *new_Iterator(struct DLL *list) {
+struct Iter *new_Iter(struct DLL *list) {
     if (list == NULL) return NULL;
     
-    struct Iterator *iter = malloc(sizeof(struct Iterator));
+    struct Iter *iter = malloc(sizeof(struct Iter));
     iter->next = list->start;
     iter->list = list;
     return iter;
@@ -30,22 +30,19 @@ struct node* getNode(struct DLL *list, int index) {
     if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function getNode(DLL, int, int): node\n");
     if (index == 0) return list->start;
     
-    if (index>0) {
-        struct node *ptr = list->start;
-        for (int i = 0; i < index; i++) {
-            if (ptr == NULL) return NULL;
-            ptr = ptr->right;
-        }
-        return ptr;
-    } else {
-        struct node *ptr = list->end;
-        index = -1-index;
-        for (int i = 0; i < index; i++) {
-            if (ptr == NULL) return NULL;
-            ptr = ptr->left;
-        }
-        return ptr;
+    struct node *ptr;
+    if (index>=0) ptr = list->start;
+    else ptr = list->end;
+
+    int i = 0;
+    while (1) {
+        if (index >= 0 && index <= i++) break;
+        else if (index < 0 && index+1 >= i--) break;
+        if (ptr == NULL) return NULL;
+        if (index < 0) ptr = ptr->left;
+        else ptr = ptr->right;
     }
+    return ptr;
 }
 
 void insert(struct DLL *list, int index, int value) {
@@ -63,11 +60,11 @@ void insert(struct DLL *list, int index, int value) {
     } else {
         if (index > 0) {
             prev = getNode(list, index-1);
-            if (prev == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function getNode(DLL, int, int): node\n", index);
+            if (prev == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function getNode(DLL, int, int): node\n", index-1);
             next = prev->right;
         } else {
             next = getNode(list, index+1);
-            if (next == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function getNode(DLL, int, int): node\n", -1-index);
+            if (next == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function getNode(DLL, int, int): node\n", index-1);
             prev = next->left;
         } 
     }
@@ -110,8 +107,8 @@ int delete(struct DLL *list, int index) {
     return value;
 }
 
-struct node* nextNode(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function nextNode(Iterator): node\n");
+struct node* nextNode(struct Iter *iter) {
+    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function nextNode(Iter): node\n");
     
     struct node *temp = iter->next;
     if (iter->next != NULL) {
@@ -121,8 +118,8 @@ struct node* nextNode(struct Iterator *iter) {
     return temp;
 }
 
-struct node* prevNode(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function prevNode(Iterator): node\n");
+struct node* prevNode(struct Iter *iter) {
+    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function prevNode(Iter): node\n");
     
     struct node *temp = iter->prev;
     if (iter->prev != NULL) {
@@ -132,27 +129,27 @@ struct node* prevNode(struct Iterator *iter) {
     return temp;
 }
 
-int hasNextNode(struct Iterator *iter) { 
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function hasNextNode(Iterator): int\n");
+int hasNextNode(struct Iter *iter) { 
+    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function hasNextNode(Iter): int\n");
     
     return iter->next != NULL;
 }
 
-int hasPrevNode(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function hasPrevNode(Iterator): int\n");
+int hasPrevNode(struct Iter *iter) {
+    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function hasPrevNode(Iter): int\n");
     
     return iter->prev != NULL;
 }
 
-void resetIterToStart(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function resetIterToStart(Iterator): void\n");
+void resetIterToStart(struct Iter *iter) {
+    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function resetIterToStart(Iter): void\n");
     
     iter->next = iter->list->start;
     iter->prev = NULL;
 }
 
-void resetIterToEnd(struct Iterator *iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iterator is NULL\n\t@ function resetIterToEnd(Iterator): void\n");
+void resetIterToEnd(struct Iter *iter) {
+    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function resetIterToEnd(Iter): void\n");
     
     iter->prev = iter->list->end;
     iter->next = NULL;
@@ -161,19 +158,23 @@ void resetIterToEnd(struct Iterator *iter) {
 int get(struct DLL *list, int index) {
     if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function get(DLL, int): int\n");
 
-    return getNode(list, index)->value;
+    struct node *ptr = getNode(list, index);
+    if (ptr == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function set(DLL, int): int\n", index);
+    return ptr->value;
 }
 
 void set(struct DLL *list, int index, int value) {
     if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function set(DLL, int, int): void\n");
     
-    getNode(list, index)->value = value;
+    struct node *ptr = getNode(list, index);
+    if (ptr == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function set(DLL, int, int): void\n", index);
+    ptr->value = value;
 }
 
 int length(struct DLL *list) {
     if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function length(DLL): int\n");
     
-    struct Iterator *iter = new_Iterator(list);
+    struct Iter *iter = new_Iter(list);
     int length = 0;
     while (nextNode(iter) != NULL) length++;
     return length;
@@ -181,7 +182,7 @@ int length(struct DLL *list) {
 
 void main() {
     struct DLL *linked = new_DLL();
-    struct Iterator *iter = new_Iterator(linked);
+    struct Iter *iter = new_Iter(linked);
 
     printf("Menu:\n    1.Insert At First\n    2.Insert At nth Position\n    3.Insert At End\n");
     printf("    4.Delete At First\n    5.Delete At nth Position\n    6.Delete At End\n");
