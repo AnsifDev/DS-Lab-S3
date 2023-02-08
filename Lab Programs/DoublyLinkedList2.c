@@ -92,11 +92,6 @@ int delete(struct DLL *list, int index) {
     prev = temp->left;
 
     if (next != NULL) next->left = prev;
-    else list->end == prev;
-    if (prev != NULL) prev->right = next;
-    else list->start == next;
-
-    if (next != NULL) next->left = prev;
     else list->end = prev;
     if (prev != NULL) prev->right = next;
     else list->start = next;
