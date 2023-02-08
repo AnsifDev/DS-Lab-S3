@@ -10,16 +10,15 @@ int hash(int key) {
 	for (int Num = key; Num != 0; Num /= size) index += Num%size;
 	index %= size;
 
-	index = index<0?index*-1:index;
+	index = (index<0)? -index: index;
 
-	int cIndex = index;
-	while (keys[cIndex] != 0) {
-		if (keys[cIndex] == key) return cIndex;
-		cIndex = (cIndex+1)%size;
-		if (cIndex == index) return -1;
+	for (int i = 0; i < size; i++) {
+		int newIndex = (index+i)%size;
+		if (keys[newIndex] == 0 || keys[newIndex] == key)
+			return (index+i)%size;
 	}
 
-	return cIndex;
+	return -1;
 }
 
 int put(int key) {
