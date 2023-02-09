@@ -1,3 +1,4 @@
-sparseMatrix
+*
+!*.c
+!.gitignore
 .vscode
-a.out
