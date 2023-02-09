@@ -8,113 +8,76 @@ struct node {
     struct node *link;
 };
 
-struct SinglyLinkedList {
+struct SLL {
     struct node *head, *tail;
 };
 
-struct SinglyLinkedList* new_SinglyLinkedList() {
-    return malloc(sizeof(struct SinglyLinkedList));
+struct SLL* new_SLL() {
+    return malloc(sizeof(struct SLL));
 }
 
-struct SinglyLinkedList_Iterator {
-    struct node *ptr, **head;
-};
-
-struct SinglyLinkedList_Iterator* new_SinglyLinkedList_Iterator(struct SinglyLinkedList* list) {
-    if (list == NULL) return NULL;
-    struct SinglyLinkedList_Iterator* iter = malloc(sizeof(struct SinglyLinkedList_Iterator));
-    iter->ptr = list->head;
-    iter->head = &(list->head);
-    return iter;
-}
-
-int SinglyLinkedList_Iterator_hasNextNode(struct SinglyLinkedList_Iterator* iter) {
-    if (iter == NULL) return 0;
-    return iter->ptr != NULL;
-}
-
-struct node* SinglyLinkedList_Iterator_nextNode(struct SinglyLinkedList_Iterator* iter) {
-    if (iter == NULL) return NULL;
-    struct node* temp = iter->ptr;
-    if (temp != NULL) iter->ptr = temp->link;
-    return temp;
-}
-
-void SinglyLinkedList_Iterator_reset(struct SinglyLinkedList_Iterator* iter) {
-    if (iter == NULL) return;
-    iter->ptr = *(iter->head);
-}
-
-struct node* SinglyLinkedList_getNode(struct SinglyLinkedList* list, int index) {
-    if (list == NULL) return NULL;
-
+struct node* SLL_getNode(struct SLL* list, int index) {
+    if (list == NULL) printf("NullPointerException: Parameter passed as SLL is NULL\n\t@ function SLL_getNode(SLL, int, int): node\n");
+    
     if (index < -2) return NULL;
-    if (index == 0) return list->head;
-    if (index == -1) return list->tail;
+    if (list->head == NULL);
+    if (index == -2 && list->head->link == NULL) return NULL;
     
     struct node* ptr;
-    struct SinglyLinkedList_Iterator* iter = new_SinglyLinkedList_Iterator(list);
-    if (index == -2) {
-        if (list->head->link != NULL) while (1) {
-            ptr = SinglyLinkedList_Iterator_nextNode(iter);
-            if (ptr->link->link == NULL) break;
-        }
-    } else {
-        for (int i = 0; i <= index; i++) {
-            if (SinglyLinkedList_Iterator_hasNextNode(iter)) ptr = SinglyLinkedList_Iterator_nextNode(iter);
-            else {
-                free(iter);
-                return NULL;
-            }
-        }
-    }
+    int i = 0;
 
-    free(iter);
+    for (ptr = list->head; 1; ptr = ptr->link)
+        if (index == -2 && ptr->link->link == NULL) break;
+        else if (index == -1 && ptr->link == NULL) break;
+        else if (index >= 0) 
+            if (ptr == NULL) return NULL;
+            else if (index <= i++) break;
     return ptr;
 }
 
-int SinglyLinkedList_insertNode(struct SinglyLinkedList* list, int index, struct node* temp) {
-    if (list == NULL) return 1;
+void SLL_insertNode(struct SLL* list, int index, struct node *temp) {
+    if (list == NULL) printf("NullPointerException: Parameter passed as SLL is NULL\n\t@ function SLL_insert(SLL, int, int): void\n");
+    
+    struct node *prev, *next;
 
     if (index == 0 || index == -1 && list->head == NULL) {
-        temp->link = list->head;
-        list->head = temp;
-        if (temp->link == NULL) list->tail = temp;
-        return 0;
+        prev = NULL;
+        next = list->head;
+    } else {
+        if (index == -1) prev = SLL_getNode(list, -1);
+        else if (index > 0) prev = SLL_getNode(list, index-1); 
+        if (prev == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function SLL_insert(SLL, int, int): void\n", index-1);
+        next = prev->link;
     }
-
-    struct node* ptr;
-    if (index == -1) ptr = SinglyLinkedList_getNode(list, -1);
-    else if (index > 0) ptr = SinglyLinkedList_getNode(list, index-1); 
-    else return 1;
-
-    if (ptr == NULL) return 1;
-    temp->link = ptr->link;
-    ptr->link = temp;
-    if (temp->link == NULL)  list->tail = temp;
-    return 0;
+    
+    temp->link = next;
+    if (prev != NULL) prev->link = temp;
+    else list->head = temp;
 }
 
-struct node* SinglyLinkedList_deleteNode(struct SinglyLinkedList* list, int index) {
-    if (list == NULL) return NULL;
-
-    struct node* temp;
-    if (index == 0) {
+struct node *SLL_deleteNode(struct SLL* list, int index) {
+    if (list == NULL) printf("NullPointerException: Parameter passed as SLL is NULL\n\t@ function SLL_delete(SLL, int): int\n");
+    
+    struct node *temp, *prev, *next;
+    if (index == 0 || index == -1 && list->head->link == NULL) {
+        prev = NULL;
         temp = list->head;
-        list->head = temp->link;
-        if (list->head == NULL) list->tail = NULL;
     } else if (index > -2) {
-        struct node* ptr = SinglyLinkedList_getNode(list, index-1);
-        if (ptr == NULL) return NULL;
-        temp = ptr->link;
-        ptr->link = temp->link;
-        if (ptr->link == NULL) list->tail = ptr;
-    } else return NULL;
+        prev = SLL_getNode(list, index-1);
+        if (prev == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function SLL_delete(SLL, int, int): void\n", index-1);
+        temp = prev->link;
+    }
 
+    if (temp == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function SLL_delete(SLL, int, int): void\n", index);
+    next = temp->link;
+    
+    if (prev != NULL) prev->link = next;
+    else list->head = next;
+    
     return temp;
 }
 
-int SinglyLinkedList_insert(struct SinglyLinkedList* list, int index, int pID, int pSize, char pName[8]) {
+int SLL_insert(struct SLL* list, int index, int pID, int pSize, char* pName) {
     if (list == NULL) return 1;
     
     struct node* temp = malloc(sizeof(struct node));
@@ -122,33 +85,26 @@ int SinglyLinkedList_insert(struct SinglyLinkedList* list, int index, int pID, i
     temp->pID = pID;
     temp->pSize = pSize;
 
-    int returnCode = SinglyLinkedList_insertNode(list, index, temp);
-    if (returnCode == 1) free(temp);
-    return returnCode;
+    SLL_insertNode(list, index, temp);
 }
 
-void display (struct SinglyLinkedList *list, char* str) {
+void display (struct SLL* list, char* str) {
     printf("%s", str);
-    struct SinglyLinkedList_Iterator *iter = new_SinglyLinkedList_Iterator(list);
     printf("SL No.\tName\tID\tSize\n");
-    SinglyLinkedList_Iterator_reset(iter);
-    for (int i = 0; SinglyLinkedList_Iterator_hasNextNode(iter); i++) {
-        struct node *n = SinglyLinkedList_Iterator_nextNode(iter);
-        if (n->pID == -2) {
-            for (int i = 0; i < 4*8; i++) printf("-");
-            printf("\n");
-            i--;
-        } else {
-            printf("%d\t", i);
-            if (n->pID == -1) printf("Free\t\t");
-            else printf("%s\t%d\t", n->pName, n->pID);
-            printf("%d\n", n->pSize);
+    int sl = 0;
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) {
+        if (ptr->pID == -2) for (int i = 0; i < 4*8; i++) printf("-");
+        else {
+            printf("%d\t", sl++);
+            if (ptr->pID == -1) printf("Free\t\t");
+            else printf("%s\t%d\t", ptr->pName, ptr->pID);
+            printf("%d", ptr->pSize);
         }
-        
+        printf("\n");
     }
 }
 
-void create(struct SinglyLinkedList *memory, struct SinglyLinkedList *que, int pID, int maxSize) {
+void create(struct SLL *memory, struct SLL *que, int pID, int maxSize) {
     int pSize;
     char pName[50];
 
@@ -161,22 +117,21 @@ void create(struct SinglyLinkedList *memory, struct SinglyLinkedList *que, int p
     if (pSize > maxSize) printf("Process Size is too large!!!\n");
     else {
         printf("Process created with ID %d\n", pID);
-        struct SinglyLinkedList_Iterator *iter = new_SinglyLinkedList_Iterator(memory);
-        int index = -1, min = maxSize+10;
-        for (int i = 0; SinglyLinkedList_Iterator_hasNextNode(iter); i++) {
-            struct node *n = SinglyLinkedList_Iterator_nextNode(iter);
+        int index = -1, min = maxSize+10, i = 0;
+        for (struct node *n = memory->head; n != NULL; n = n->link) {
             //printf("Log:\tBlock Size: %d\tProcess Size: %d\tCurrent Min: %d\tCurrent Index: %d\n", size, pSize, min, index);
             if (n->pID == -1 && n->pSize >= pSize && min > n->pSize) {
                 min = n->pSize;
                 index = i;
             }
+            i++;
         }
 
         if (index == -1) {
             printf("Process: %s,\tpID: %d\t\t[Queued]\n", pName, pID);
-            SinglyLinkedList_insert(que, -1, pID, pSize, pName);
+            SLL_insert(que, -1, pID, pSize, pName);
         } else {
-            struct node *prev = SinglyLinkedList_getNode(memory, index-1);
+            struct node *prev = SLL_getNode(memory, index-1);
             struct node *this = prev->link;
             struct node *new = malloc(sizeof(struct node));
 
@@ -192,13 +147,10 @@ void create(struct SinglyLinkedList *memory, struct SinglyLinkedList *que, int p
             prev->link = new;
             printf("Process: %s,\tpID: %d\t\t[Started]\n", pName, pID);
         }
-        free(iter);
     }
 }
 
-void stop(struct SinglyLinkedList *memory, struct SinglyLinkedList *que) {
-    struct SinglyLinkedList_Iterator *iter = new_SinglyLinkedList_Iterator(memory);
-    struct SinglyLinkedList_Iterator *iter1 = new_SinglyLinkedList_Iterator(que);
+void stop(struct SLL *memory, struct SLL *que) {
 
     int pID;
     printf(">> Enter the process id: ");
@@ -209,33 +161,36 @@ void stop(struct SinglyLinkedList *memory, struct SinglyLinkedList *que) {
         return;
     }
 
-    int index = -1, min = 0;
-    for (int i = 0; SinglyLinkedList_Iterator_hasNextNode(iter); i++) {
-        int id = SinglyLinkedList_Iterator_nextNode(iter)->pID;
+    int index = -1, min = 0, i = 0;
+    for (struct node *ptr = memory->head; ptr != NULL; ptr = ptr->link) {
+        int id = ptr->pID;
         if (pID == id) {
             index = i;
             break;
         }
+        i++;
     }
 
     if (index == -1) {
-        for (int i = 0; SinglyLinkedList_Iterator_hasNextNode(iter1); i++) {
-            int id = SinglyLinkedList_Iterator_nextNode(iter1)->pID;
+        int i = 0;
+        for (struct node *ptr = que->head; ptr != NULL; ptr = ptr->link) {
+        int id = ptr->pID;
             if (pID == id) {
                 index = i;
                 break;
             }
+            i++;
         }
 
         if (index == -1) printf("No process found with ID %d\n", pID);
         else {
-            struct node *n = SinglyLinkedList_deleteNode(que, index);
+            struct node *n = SLL_deleteNode(que, index);
             printf("Process:%s,\tpID: %d\t\t[Dequeued]\n", n->pName, pID);
             free(n);
         }
     } else {
         struct node *this, *prev, *post;
-        prev = SinglyLinkedList_getNode(memory, index-1);
+        prev = SLL_getNode(memory, index-1);
         this = prev->link;
         post = this->link;
 
@@ -244,10 +199,10 @@ void stop(struct SinglyLinkedList *memory, struct SinglyLinkedList *que) {
 
         if (prev->pID == -1) {
             this->pSize += prev->pSize;
-            prev = SinglyLinkedList_deleteNode(memory, index-1);
+            prev = SLL_deleteNode(memory, index-1);
             free(prev);
             index--;
-            prev = SinglyLinkedList_getNode(memory, index-1);
+            prev = SLL_getNode(memory, index-1);
         }
 
         if (post->pID == -1) {
@@ -256,11 +211,13 @@ void stop(struct SinglyLinkedList *memory, struct SinglyLinkedList *que) {
             free(post);
         }
 
-        SinglyLinkedList_Iterator_reset(iter1);
-        for(int i = 0; SinglyLinkedList_Iterator_hasNextNode(iter1); i++) {
-            struct node *process = SinglyLinkedList_Iterator_nextNode(iter1);
+        
+        struct node *ptr = que->head;
+        for (int i = 0; ptr != NULL; i++) {
+            struct node *process = ptr;
+            ptr = ptr->link;
             if (process->pSize <= this->pSize) {
-                process = SinglyLinkedList_deleteNode(que, i);
+                process = SLL_deleteNode(que, i);
                 this->pSize -= process->pSize;
 
                 if (this->pSize > 0) process->link = this;
@@ -269,9 +226,9 @@ void stop(struct SinglyLinkedList *memory, struct SinglyLinkedList *que) {
                     free(this);
                 }
 
+                i--;
                 prev->link = process;
                 prev = process;
-                i--;
                 printf("Process: %s,\tpID: %d\t\t[Started]\n", process->pName, process->pID);
             }
         }
@@ -279,8 +236,7 @@ void stop(struct SinglyLinkedList *memory, struct SinglyLinkedList *que) {
 }
 
 void main() {
-    struct SinglyLinkedList *memory = new_SinglyLinkedList();
-    struct SinglyLinkedList_Iterator *iter = new_SinglyLinkedList_Iterator(memory);
+    struct SLL *memory = new_SLL();
     int fBlockMax = 0;
     int maxSize = 0;
 
@@ -299,18 +255,18 @@ void main() {
         scanf("%d", &size);
         if (size > 0) {
             if (size > maxSize) maxSize = size;
-            SinglyLinkedList_insert(memory, -1, -1, size, "Free");
-            SinglyLinkedList_insert(memory, -1, -2, 10, "Data");
+            SLL_insert(memory, -1, -1, size, "Free");
+            SLL_insert(memory, -1, -2, 10, "Data");
         } else {
             printf("Terminating: Expected size greater than zero!!!\n");
             return;
         }
     }
-    SinglyLinkedList_insert(memory, 0, -2, 10, "Data");
+    SLL_insert(memory, 0, -2, 10, "Data");
 
     display(memory, "---Current State of Memory---\n");
 
-    struct SinglyLinkedList *Queue = new_SinglyLinkedList();
+    struct SLL *Queue = new_SLL();
     int input;
 
     printf("\n----Menu----\n  1. Create new process\n  2. View Process List\n");

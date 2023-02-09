@@ -14,65 +14,32 @@ struct SLL* new_SLL() {
     return malloc(sizeof(struct SLL));
 }
 
-struct SLL_Iter {
-    struct node *ptr, **head;
-};
-
-struct SLL_Iter* new_SLL_Iter(struct SLL* list) {
-    if (list == NULL) return NULL;
-
-    struct SLL_Iter* iter = malloc(sizeof(struct SLL_Iter));
-    iter->ptr = list->head;
-    iter->head = &(list->head);
-    return iter;
-}
-
-int SLL_Iter_hasNextNode(struct SLL_Iter* iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function SLL_Iter_hasNextNode(Iter): int\n");
-    
-    return iter->ptr != NULL;
-}
-
-struct node* SLL_Iter_nextNode(struct SLL_Iter* iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function SLL_Iter_nextNode(Iter): node\n");
-    
-    struct node* temp = iter->ptr;
-    if (temp != NULL) iter->ptr = temp->link;
-    return temp;
-}
-
-void SLL_Iter_reset(struct SLL_Iter* iter) {
-    if (iter == NULL) printf("NullPointerException: Parameter passed as Iter is NULL\n\t@ function SLL_Iter_reset(Iter): void\n");
-    
-    iter->ptr = *(iter->head);
-}
-
 struct node* SLL_getNode(struct SLL* list, int index) {
     if (list == NULL) printf("NullPointerException: Parameter passed as SLL is NULL\n\t@ function SLL_getNode(SLL, int, int): node\n");
     
     if (index < -2) return NULL;
+    if (list->head == NULL);
+    if (index == -2 && list->head->link == NULL) return NULL;
     
     struct node* ptr;
     int i = 0;
 
-    if (list->head->link != NULL || index > -2) 
-        for (ptr = list->head; 1; ptr = ptr->link) {
-            if (index == -2 && ptr->link->link == NULL) break;
-            else if (index == -1 && ptr->link == NULL) break;
-            else if (index >= 0) 
-                if (ptr == NULL) return NULL;
-                else if (index <= i++) break;
-        }
+    for (ptr = list->head; 1; ptr = ptr->link)
+        if (index == -2 && ptr->link->link == NULL) break;
+        else if (index == -1 && ptr->link == NULL) break;
+        else if (index >= 0) 
+            if (ptr == NULL) return NULL;
+            else if (index <= i++) break;
     return ptr;
 }
 
-int SLL_insert(struct SLL* list, int index, int value) {
+void SLL_insert(struct SLL* list, int index, int value) {
     if (list == NULL) printf("NullPointerException: Parameter passed as SLL is NULL\n\t@ function SLL_insert(SLL, int, int): void\n");
     
     struct node *prev, *next, *temp = malloc(sizeof(struct node));
     temp->value = value;
 
-    if (index == 0) {
+    if (index == 0 || index == -1 && list->head == NULL) {
         prev = NULL;
         next = list->head;
     } else {
@@ -91,7 +58,7 @@ int SLL_delete(struct SLL* list, int index) {
     if (list == NULL) printf("NullPointerException: Parameter passed as SLL is NULL\n\t@ function SLL_delete(SLL, int): int\n");
     
     struct node *temp, *prev, *next;
-    if (index == 0) {
+    if (index == 0 || index == -1 && list->head->link == NULL) {
         prev = NULL;
         temp = list->head;
     } else if (index > -2) {
@@ -133,9 +100,7 @@ int SLL_length(struct SLL* list) {
     if (list == NULL) printf("NullPointerException: Parameter passed as SLL is NULL\n\t@ function SLL_length(SLL): int\n");
     
     int length = 0;
-    struct SLL_Iter* iter = new_SLL_Iter(list);
-    while(SLL_Iter_nextNode(iter) != NULL) length++;
-    free(iter);
+    for (struct node *ptr = list->head; 1; ptr = ptr->link) length++;
     return length;
 }
 
