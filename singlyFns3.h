@@ -10,7 +10,7 @@ struct SLL {
     struct node *head, *tail;
 };
 
-struct SLL* new_SLL() {
+struct SLL *new_SLL() {
     return malloc(sizeof(struct SLL));
 }
 
