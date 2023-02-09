@@ -1,4 +1,4 @@
-#include "singlyFns3_LabOnly.h"
+#include "singlyFns3.h"
 
 void main() {
     struct SLL* list1 = new_SLL();
@@ -7,7 +7,7 @@ void main() {
     printf("    3. Insert at the end\n    4. Delete at the begining\n");
 	printf("    5. Delete at nth position\n    6. Delete at the end\n");
     printf("    7. Get at the nth position\n    8.Set at the nth position\n");
-    printf("    9. Length of the List\n    10. Exit\n\n");
+    printf("    9. Length of the List\n    10. Exit\n");
 	while(1) {
         printf(">> ");
         scanf("%d", &inp);
