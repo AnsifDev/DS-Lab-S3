@@ -4,7 +4,7 @@
 
 struct node {
     int pID, pSize;
-    char pName[8];
+    char pName[16];
     struct node *link;
 };
 
@@ -104,14 +104,25 @@ void display (struct SLL* list, char* str) {
     }
 }
 
+void gets(char* str) {
+    int i = 0;
+    for (int a = getc(stdin); 1; a = getc(stdin)) {
+        if (a == '\n')
+            if (i != 0) break;
+            else continue;
+        str[i++] = a;
+    }
+    str[i] = '\0';
+}
+
 void create(struct SLL *memory, struct SLL *que, int pID, int maxSize) {
     int pSize;
     char pName[50];
 
     printf("---Creating New Process---\n");
     printf(">> Enter the process Name: ");
-    scanf("%s", pName);
-    pName[7] = '\0';
+    gets(pName);
+    pName[15] = '\0';
     printf(">> Enter the process Size: ");
     scanf("%d", &pSize);
     if (pSize > maxSize) printf("Process Size is too large!!!\n");

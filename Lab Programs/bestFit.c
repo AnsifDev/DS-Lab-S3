@@ -10,7 +10,7 @@ struct node {
 
 struct node* SLL_getNode(int index) {
     if (index < -2) return NULL;
-    if (head == NULL);
+    if (head == NULL) return NULL;
     if (index == -2 && head->link == NULL) return NULL;
     
     struct node* ptr;
