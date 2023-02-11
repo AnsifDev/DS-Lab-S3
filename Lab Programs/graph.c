@@ -2,7 +2,6 @@
 
 int graph[10][10], maxNodes, que[10], f=0, r=0, stack[10], Top = -1;
 
-
 int push(int value) {
     if (Top+1 >= 10) return 1;
     stack[++Top] = value;

@@ -4,7 +4,7 @@
 
 struct node {
     int pID, pSize;
-    char pName[8];
+    char pName[16];
     struct node *link;
 } *head;
 
@@ -55,37 +55,25 @@ void SLL_insert(int index, int pID, int pSize, char* pName) {
 
 void display (char* str) {
     printf("%s", str);
-    printf("SL No.\tName\tID\tSize\n");
+    printf("SL No.\tName\t\tID\tSize\n");
     int sl = 0;
     for (struct node *ptr = head; ptr != NULL; ptr = ptr->link) {
-        if (ptr->pID == -2) for (int i = 0; i < 4*8; i++) printf("-");
+        if (ptr->pID == -2) for (int i = 0; i < 5*8; i++) printf("-");
         else {
             printf("%d\t", sl++);
-            if (ptr->pID == -1) printf("Free\t\t");
-            else printf("%s\t%d\t", ptr->pName, ptr->pID);
+            if (ptr->pID == -1) printf("Free\t\t\t");
+            else {
+                printf("%s\t", ptr->pName);
+                if (strlen(ptr->pName) < 8) printf("\t");
+                printf("%d\t", ptr->pID);
+            }
             printf("%d", ptr->pSize);
         }
         printf("\n");
     }
 }
 
-void create(int pID, int maxSize) {
-    int pSize;
-    char pName[50];
-
-    printf("---Creating New Process---\n");
-    printf(">> Enter the process Name: ");
-    scanf("%s", pName);
-    pName[7] = '\0';
-    printf(">> Enter the process Size: ");
-    scanf("%d", &pSize);
-
-    if (pSize > maxSize) {
-        printf("Process Size is too large!!!\n");
-        return;
-    }
-
-    printf("Process created with ID %d\n", pID);
+int pickBestFit(int pSize, int maxSize) {
     int index = -1, min = maxSize+10, i = 0;
     for (struct node *ptr = head; ptr != NULL; ptr = ptr->link) {
         //printf("Log:\tBlock Size: %d\tProcess Size: %d\tCurrent Min: %d\tCurrent Index: %d\n", size, pSize, min, index);
@@ -95,6 +83,38 @@ void create(int pID, int maxSize) {
         }
         i++;
     }
+    return index;
+}
+
+void gets(char* str) {
+    int i = 0;
+    for (int a = getc(stdin); 1; a = getc(stdin)) {
+        if (a == '\n')
+            if (i != 0) break;
+            else continue;
+        str[i++] = a;
+    }
+    str[i] = '\0';
+}
+
+void create(int pID, int maxSize) {
+    int pSize;
+    char pName[50];
+
+    printf("---Creating New Process---\n");
+    printf(">> Enter the process Name: ");
+    gets(pName);
+    pName[15] = '\0';
+    printf(">> Enter the process Size: ");
+    scanf("%d", &pSize);
+
+    if (pSize > maxSize) {
+        printf("Process Size is too large!!!\n");
+        return;
+    }
+
+    printf("Process created with ID %d\n", pID);
+    int index = pickBestFit(pSize, maxSize);
 
     if (index == -1) {
         printf("Error: Process cannot be loaded, Low Memory\n");
@@ -120,8 +140,8 @@ void create(int pID, int maxSize) {
 }
 
 void main() {
-    int fBlockMax = 0;
-    int maxSize = 0;
+
+    int fBlockMax = 0, maxSize = 0, input;
 
     printf("---Creating Memory Partitions---\n");
 
@@ -148,8 +168,6 @@ void main() {
     SLL_insert(0, -2, 10, "Data");
 
     display("---Current State of Memory---\n");
-
-    int input;
 
     printf("\n----Menu----\n  1. Create new process\n  2. View Process List\n");
     printf("  3. Exit\n");
