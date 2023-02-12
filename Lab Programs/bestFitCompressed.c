@@ -18,45 +18,39 @@ struct node* SLL_getNode(int index) {
     return ptr;
 }
 
-void SLL_insertNode(int index, struct node *temp) {
-    struct node *prev, *next;
-
-    if (index == 0 || index == -1 && head == NULL) {
-        next = head;
-        if (head == NULL) tail = temp;
-    } else {
-        if (index == -1) tail;
-        else if (index > 0) prev = SLL_getNode(index-1); 
-        next = prev->link;
-    }
-    
-    temp->link = next;
-    if (prev != NULL) prev->link = temp;
-    else head = temp;
-}
-
-void SLL_insert(int index, int pID, int pSize, char* pName) {
-    struct node* temp = malloc(sizeof(struct node));
+struct node* SLL_insert (int index, int pID, int pSize, char* pName) {
+    struct node *prev = NULL, *next = NULL, *temp = malloc(sizeof(struct node));
 
     strcpy(temp->pName, pName);
     temp->pID = pID;
     temp->pSize = pSize;
 
-    SLL_insertNode(index, temp);
+    if (index == 0 || (index == -1 && head == NULL)) {
+        next = head;
+    } else {
+        if (index == -1) prev = tail;
+        else if (index > 0) prev = SLL_getNode(index-1); 
+        next = prev->link;
+    }
+
+    temp->link = next;
+    if (next == NULL) tail = temp;
+    if (prev != NULL) prev->link = temp;
+    else head = temp;
+    return temp;
 }
 
 void display (char* str) {
-    printf("%sSL No.\tName\t\tID\tSize\n", str);
+    printf("%sSL No.\tName\tID\tSize\n", str);
     int sl = 0;
     for (struct node *ptr = head; ptr != NULL; ptr = ptr->link) {
         if (ptr->pID == -2) for (int i = 0; i < 5*8; i++) printf("-");
         else {
             printf("%d\t", sl++);
-            if (ptr->pID == -1) printf("Free\t\t\t%d");
+            if (ptr->pID == -1) printf("Free\t\t");
             else printf("%s\t%d\t", ptr->pName, ptr->pID);
             printf("%d", ptr->pSize);
-        }
-        printf("\n");
+        } printf("\n");
     }
 }
 
@@ -66,10 +60,8 @@ int pickBestFit(int pSize, int maxSize) {
         if (ptr->pID == -1 && ptr->pSize >= pSize && min > ptr->pSize) {
             min = ptr->pSize;
             index = i;
-        }
-        i++;
-    }
-    return index;
+        } i++;
+    } return index;
 }
 
 void create(int pID, int maxSize) {
@@ -77,23 +69,16 @@ void create(int pID, int maxSize) {
     char pName[50];
 
     printf(">> Enter the process Name: ");
-    scanf("%s", &pName);
+    scanf("%s", pName);
     pName[8] = '\0';
     printf(">> Enter the process Size: ");
     scanf("%d", &pSize);
 
     int index = pickBestFit(pSize, maxSize);
-
     if (index == -1) { printf("Error: Low Memory\n"); return; }
-    
-    struct node *new = malloc(sizeof(struct node)), *this;
 
-    new->pID = pID;
-    strcpy(new->pName, pName);
-    new->pSize = pSize;
-
-    SLL_insertNode(index, new);
-    this = new->link;
+    struct node *new = SLL_insert(index, pID, pSize, pName);
+    struct node *this = new->link;
     if (this->pSize == pSize) { new->link = this->link; free(this);}
     else this->pSize -= pSize;
 
@@ -114,6 +99,7 @@ void main() {
         SLL_insert(-1, -1, size, "Free");
         SLL_insert(-1, -2, 10, "Data");
     }
+    struct node *pickup = head;
 
     printf("\nMenu:\n  1. Create new process\n  2. View Process List\n  3. Exit\n");
     for (int id = 0; 1; id++) {
