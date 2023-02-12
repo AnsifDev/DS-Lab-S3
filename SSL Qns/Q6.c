@@ -18,7 +18,6 @@ void main() {
     printf("Enter the number to check the occurance: ");
     scanf("%d", &number);
 
-    struct SLL_Iterator* iter = new_SLL_Iterator(list);
     for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) 
         if (ptr->value == number) count++;
     

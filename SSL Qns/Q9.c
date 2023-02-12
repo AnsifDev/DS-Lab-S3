@@ -26,7 +26,6 @@ void main() {
         SLL_insert(list, -1, value);
     }
 
-    struct SLL_Iterator *iter = new_SLL_Iterator(list);
     for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) {
         int value = ptr->value;
         if (value%2 == 0) SLL_insert(even, -1, value);

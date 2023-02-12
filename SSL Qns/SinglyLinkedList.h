@@ -100,7 +100,7 @@ int SLL_length(struct SLL* list) {
     if (list == NULL) printf("NullPointerException: Parameter passed as SLL is NULL\n\t@ function SLL_length(SLL): int\n");
     
     int length = 0;
-    for (struct node *ptr = list->head; 1; ptr = ptr->link) length++;
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) length++;
     return length;
 }
 
