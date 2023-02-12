@@ -19,8 +19,8 @@ void main() {
     scanf("%d", &number);
 
     struct SLL_Iterator* iter = new_SLL_Iterator(list);
-    while(SLL_Iterator_hasNextNode(iter))
-        if (SLL_Iterator_nextNode(iter)->value == number) count++;
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) 
+        if (ptr->value == number) count++;
     
     printf("Count of %d in the list is %d\n", number, count);
 }

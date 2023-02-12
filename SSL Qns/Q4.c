@@ -2,10 +2,8 @@
 
 void display(struct SLL* list) {
     printf("List: ");
-    struct SLL_Iterator* iter = new_SLL_Iterator(list);
-    while(SLL_Iterator_hasNextNode(iter)) {
-        int value = SLL_Iterator_nextNode(iter)->value;
-        printf("\t%d", value);
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) {
+        printf("\t%d", ptr->value);
     }
     printf("\n");
 }

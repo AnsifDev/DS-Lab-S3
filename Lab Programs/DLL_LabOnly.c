@@ -10,12 +10,12 @@ struct DLL {
     struct node *start, *end;
 };
 
-struct DLL *new_DLL() {return malloc(sizeof(struct DLL));}
+struct DLL *new_DLL() { return malloc(sizeof(struct DLL)); }
 
-//Will return NULL
+//Will return the node for the corresponding index
+//Will return null if no node found for the index
 struct node* getNode(struct DLL *list, int index) {
     if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function getNode(DLL, int, int): node\n");
-    if (index == 0) return list->start;
     
     struct node *ptr;
     if (index>=0) ptr = list->start;
@@ -23,8 +23,8 @@ struct node* getNode(struct DLL *list, int index) {
 
     int i = 0;
     while (1) {
-        if (index >= 0 && index <= i++) break;
-        else if (index < 0 && index+1 >= i--) break;
+        if (index >= 0 && index <= i++) break; //Positive Index picker
+        else if (index < 0 && index+1 >= i--) break; //Negative Index picker
         if (ptr == NULL) return NULL;
         if (index < 0) ptr = ptr->left;
         else ptr = ptr->right;
@@ -46,10 +46,12 @@ void insert(struct DLL *list, int index, int value) {
         prev = list->end;
     } else {
         if (index > 0) {
+            //Positive indexing part
             prev = getNode(list, index-1);
             if (prev == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function getNode(DLL, int, int): node\n", index-1);
             next = prev->right;
         } else {
+            //Negative indexing part
             next = getNode(list, index+1);
             if (next == NULL) printf("InvalidIndexException: Unable to locate the node at index: %d\n\t@ function getNode(DLL, int, int): node\n", index-1);
             prev = next->left;
@@ -58,8 +60,12 @@ void insert(struct DLL *list, int index, int value) {
 
     temp->right = next;
     temp->left = prev;
+
+    //If there is no next node, then it is the node at the end
     if (next != NULL) next->left = temp;
     else list->end = temp;
+
+    //If there is no previous node, then it is the node at the begining
     if (prev != NULL) prev->right = temp;
     else list->start = temp;
 }
@@ -74,12 +80,14 @@ int delete(struct DLL *list, int index) {
     else if (index == -1) temp = list->end;
     else temp = getNode(list, index);
     
-    
     next = temp->right;
     prev = temp->left;
 
+    //If there is no next node, then it is the node at the end
     if (next != NULL) next->left = prev;
     else list->end = prev;
+
+    //If there is no previous node, then it is the node at the begining
     if (prev != NULL) prev->right = next;
     else list->start = next;
 
@@ -111,6 +119,18 @@ int length(struct DLL *list) {
     int length = 0;
     for (struct node *ptr = list->start; ptr != NULL; ptr = ptr->right) length++;
     return length;
+}
+
+//This fn is at beta stage, Not know working or not
+void clear(struct DLL *list) {
+    if (list == NULL) printf("NullPointerException: Parameter passed as DLL is NULL\n\t@ function clear(DLL): int\n");
+    
+    while (list->start != NULL) {
+        struct node *ptr = list->start;
+        list->start = ptr->right;
+        free(ptr);
+    }
+    list->end = NULL;
 }
 
 void main() {

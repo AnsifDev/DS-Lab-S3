@@ -2,12 +2,22 @@
 
 void display(struct SLL* list) {
     printf("List: ");
-    struct SLL_Iterator* iter = new_SLL_Iterator(list);
-    while(SLL_Iterator_hasNextNode(iter)) {
-        int value = SLL_Iterator_nextNode(iter)->value;
-        printf("\t%d", value);
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) {
+        printf("\t%d", ptr->value);
     }
     printf("\n");
+}
+
+int deleteByValue(struct SLL* list, int value) {
+    int i = 0;
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) {
+        if (ptr->value == value) {
+            SLL_delete(list, i);
+            return 1; //Indicates done
+        }
+        i++;
+    }
+    return 0; //Indicates failed to delete
 }
 
 void main() {
@@ -30,15 +40,6 @@ void main() {
     printf("Enter the value to remove node: ");
     scanf("%d", &removeable);
 
-    struct SLL_Iterator* iter = new_SLL_Iterator(list);
-    for (int i = 0; SLL_Iterator_hasNextNode(iter); i++) {
-        struct node* Node = SLL_Iterator_nextNode(iter);
-        if (Node->value == removeable) {
-            SLL_delete(list, i, &removeable);
-            break;
-        }
-    }
-
-    if (!SLL_Iterator_hasNextNode(iter)) printf("Value is not in the list\n");
+    if (deleteByValue(list, removeable) == 0) printf("Value is not in the list\n");
     display(list);
 }

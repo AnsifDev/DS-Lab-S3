@@ -1,11 +1,9 @@
 #include "SinglyLinkedList.h"
 
-void display(struct SLL* list, char* msg) {
-    printf("%s", msg);
-    struct SLL_Iterator* iter = new_SLL_Iterator(list);
-    while(SLL_Iterator_hasNextNode(iter)) {
-        int value = SLL_Iterator_nextNode(iter)->value;
-        printf("\t%d", value);
+void display(struct SLL* list, char* str) {
+    printf("%s", str);
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) {
+        printf("\t%d", ptr->value);
     }
     printf("\n");
 }
@@ -44,8 +42,7 @@ void main() {
     list1_end = SLL_getNode(list1, -1);
     list2_start = SLL_getNode(list2, 0);
     
-    list1_end->link = list2_start;
-    list1->tail = list2->tail;
+    list1_end->link = list2_start; //Merge
 
     display(list1, "Merged List: ");
 }

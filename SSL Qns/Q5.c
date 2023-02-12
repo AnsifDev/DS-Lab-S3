@@ -2,10 +2,8 @@
 
 void display(struct SLL* list) {
     printf("List: ");
-    struct SLL_Iterator* iter = new_SLL_Iterator(list);
-    while(SLL_Iterator_hasNextNode(iter)) {
-        int value = SLL_Iterator_nextNode(iter)->value;
-        printf("\t%d", value);
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) {
+        printf("\t%d", ptr->value);
     }
     printf("\n");
 }
@@ -26,13 +24,13 @@ void main() {
 
     display(list);
 
-    int Num, index;
+    int Num, index = 0;
     printf("Enter the number: ");
     scanf("%d", &Num);
 
-    struct SLL_Iterator* iter = new_SLL_Iterator(list);
-    while(SLL_Iterator_hasNextNode(iter))
-        if (SLL_Iterator_nextNode(iter)->value <= Num) index++;
+    //Finding the location for the Num
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link)
+        if (ptr->value <= Num) index++;
         else break;
 
     SLL_insert(list, index, Num);

@@ -1,11 +1,9 @@
 #include "SinglyLinkedList.h"
 
-void display(struct SLL* list, char* msg) {
-    printf("%s", msg);
-    struct SLL_Iterator* iter = new_SLL_Iterator(list);
-    while(SLL_Iterator_hasNextNode(iter)) {
-        int value = SLL_Iterator_nextNode(iter)->value;
-        printf("\t%d", value);
+void display(struct SLL* list, char* str) {
+    printf("%s", str);
+    for (struct node *ptr = list->head; ptr != NULL; ptr = ptr->link) {
+        printf("\t%d", ptr->value);
     }
     printf("\n");
 }
@@ -36,10 +34,7 @@ void main() {
     struct node* temp = prevNode->link;
 
     prevNode->link = NULL;
-    list2->head = temp;
-
-    list2->tail = list->tail;
-    list->tail = prevNode;
+    list2->head = temp; //Splited
 
     display(list, "List2: ");
     display(list2, "List3: ");
