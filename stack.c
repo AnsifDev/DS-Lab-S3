@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int Top = -1, stack[25];
+int Top = -1, stack[25]; 
 
 void push() {
     //Checking for overflow
